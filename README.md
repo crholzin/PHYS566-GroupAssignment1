@@ -1,10 +1,9 @@
 # PHYS566-GroupAssignment1
-Claire Chen (xc61), Kevin He (th170), Chloe Holzinger (crh50), Arjun Raghavan (ar309)
 
-Claire Chen = Claire1230
+Claire Chen (xc61) = Claire1230
 
-Kevin He = devilhtc
+Kevin He (th170) = devilhtc
 
-Chloe Holzinger = crholzin
+Chloe Holzinger (crh50) = crholzin
 
-Arjun Raghavan = aragha45
+Arjun Raghavan (ar309) = aragha45
