@@ -1,0 +1,150 @@
+
+# coding: utf-8
+
+# In[1]:
+
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+import math as m
+import random
+
+
+# In[49]:
+
+N = 999
+x = [0.0]*1000
+
+
+# In[50]:
+
+for i in range(0,N):
+    x[i] = random.random()
+
+
+# In[39]:
+
+plt.hist(x, bins=10, color='#87CEEB')
+plt.title("Distribution of 1000 Random Numbers - 10 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-1000rand-10sub.jpeg")
+plt.show()
+
+
+# In[40]:
+
+plt.hist(x, bins=20, color='#87CEEB')
+plt.title("Distribution of 1000 Random Numbers - 20 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-1000rand-20sub.jpeg")
+plt.show()
+
+
+# In[41]:
+
+plt.hist(x, bins=50, color='#87CEEB')
+plt.title("Distribution of 1000 Random Numbers - 50 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-1000rand-50sub.jpeg")
+plt.show()
+
+
+# In[42]:
+
+plt.hist(x, bins=100, color='#87CEEB')
+plt.title("Distribution of 1000 Random Numbers - 100 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-1000rand-100sub.jpeg")
+plt.show()
+
+
+# In[57]:
+
+plt.hist(x, bins=10, color='#87CEEB', label='10 subdivisions')
+plt.hist(x, bins=20, color='#6A5ACD', label='20 subdivisions')
+plt.hist(x, bins=50, color='#708090', label='50 subdivisions')
+plt.hist(x, bins=100, color='#FFFAFA', label='100 subdivisions')
+plt.title("Distribution of 1000 Random Numbers")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.legend()
+plt.ylim(0,160)
+plt.savefig("HW5a-1000rand.jpeg")
+plt.show()
+
+
+# In[58]:
+
+N = 999999
+y = [0.0]*1000000
+
+
+# In[59]:
+
+for i in range(0,N):
+    y[i] = random.random()
+
+
+# In[45]:
+
+plt.hist(y, bins=10, color='#4682B4')
+plt.title("Distribution of 1,000,000 Random Numbers - 10 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-milrand-10sub.jpeg")
+plt.show()
+
+
+# In[46]:
+
+plt.hist(y, bins=20, color='#4682B4')
+plt.title("Distribution of 1,000,000 Random Numbers - 20 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-milrand-20sub.jpeg")
+plt.show()
+
+
+# In[47]:
+
+plt.hist(y, bins=50, color='#4682B4')
+plt.title("Distribution of 1,000,000 Random Numbers - 50 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-milrand-50sub.jpeg")
+plt.show()
+
+
+# In[48]:
+
+plt.hist(y, bins=100, color='#4682B4')
+plt.title("Distribution of 1,000,000 Random Numbers - 100 subdivisions")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.savefig("HW5a-milrand-100sub.jpeg")
+plt.show()
+
+
+# In[65]:
+
+plt.hist(y, bins=10, color='#9400D3', label='10 subdivisions')
+plt.hist(y, bins=20, color='#FF1493', label='20 subdivisions')
+plt.hist(y, bins=50, color='#00BFFF', label='50 subdivisions')
+plt.hist(y, bins=100, color='#696969', label='100 subdivisions')
+plt.title("Distribution of 1,000,000 Random Numbers")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.legend()
+plt.ylim(0,150000)
+plt.savefig("HW5a-milrand.jpeg")
+plt.show()
+
+
+# In[ ]:
+
+
+
