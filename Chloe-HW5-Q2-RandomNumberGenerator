@@ -1,0 +1,70 @@
+
+# coding: utf-8
+
+# In[5]:
+
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+import math as m
+import random
+from decimal import *
+from __future__ import division
+
+
+# In[10]:
+
+# Box-Muller Method
+
+N = 999999
+x = [0.0]*1000000
+y = [0.0]*1000000
+z = [0.0]*1000000
+
+for i in range(0,N):
+    x[i] = random.random()
+    y[i] = random.random()
+    z[i] = m.sqrt(-2 * m.log(x[i])) * m.sin(2 * m.pi * y[i])
+
+
+# In[28]:
+
+sigma = 1.0
+
+def gauss(sigma,g):
+    return (1/(sigma * m.sqrt(2 * m.pi))) * m.exp(-(g**2)/(2 * ((sigma)**2)))
+
+g = np.linspace(-6,6,100)
+p = [0.0]*100
+
+for i in range(0,100):
+    p[i] = gauss(sigma,g[i]) * 1000000
+    
+
+
+# In[35]:
+
+plt.hist(z, bins=10, color='#DB7093', label='10 subdivisions')
+plt.hist(z, bins=20, color='#FFEFD5', label='20 subdivisions')
+plt.hist(z, bins=50, color='#FFDAB9', label='50 subdivisions')
+plt.hist(z, bins=100, color='#CD853F', label='100 subdivisions')
+plt.plot(g, p, color='k', lw=2, label='Gaussian Curve')
+plt.title("Gaussian Distribution of 1,000,000 Random Numbers")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.legend()
+plt.xlim(-6,6)
+plt.ylim(0,500000)
+plt.savefig("HW5b-gauss.jpeg")
+plt.show()
+
+
+# In[26]:
+
+
+
+
+# In[ ]:
+
+
+
