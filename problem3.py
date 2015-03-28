@@ -13,6 +13,12 @@ def rg(n):
     return range(2*n+1)
     
 def gene0(n):
+    '''
+    generate the initial grid 
+    with -1 representing points beyond boundary
+    and 0 the empty grid sites
+    and 1 the occupied sites
+    '''
     m=[] 
     for i in rg(n):
         t=[]
@@ -26,6 +32,9 @@ def gene0(n):
     return m
 
 def bpoints(m,n):
+    '''
+    find all boundary points
+    '''
     ps=[]
     for i in range(1,2*n):
         for j in range(1,2*n):
@@ -36,6 +45,10 @@ def bpoints(m,n):
     return ps
 
 def adj(m,loc):
+    '''
+    loc is the tuple storing the coordinate
+    return the coordinates of all adjacent non-boundary points around loc
+    '''
     (i1,j1)=loc
     n=(len(m)-1)/2
     vs=[(i1+1,j1),(i1-1,j1),(i1,j1+1),(i1,j1-1)]
@@ -47,14 +60,24 @@ def adj(m,loc):
     return vr
 
 def adjvs(m,loc):
+    '''
+    values of all adjacent points 
+    '''
     return [m[p][q] for (p,q) in adj(m,loc)]
     
 def notjoin(m,loc):
+    '''
+    check if the moving monomer has joined the cluster
+    '''
     if 1 in adjvs(m,loc):
         return False
     return True
     
 def main(d):
+    '''
+    main function
+    takes d, which is the grid size, as argument 
+    '''
     n=100/d
     m=gene0(n)
     ps=bpoints(m,n)
@@ -69,6 +92,9 @@ def main(d):
     return m
     
 def notcomp(m,n):
+    '''
+    check if the cluster is complete, which means the cluster has touched the boundary
+    '''
     for (p,q) in bpoints(m,n):
         if m[p][q]==1:
             return False
