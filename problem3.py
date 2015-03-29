@@ -19,7 +19,7 @@ def gene0(n):
     and 0 the empty grid sites
     and 1 the occupied sites
     '''
-    m=[] 
+    m=[]
     for i in rg(n):
         t=[]
         for j in rg(n):
@@ -38,8 +38,8 @@ def bpoints(m,n):
     ps=[]
     for i in range(1,2*n):
         for j in range(1,2*n):
-            if m[i][j]==0:
-                if -1 in adjvs(m,(i,j)):
+            if m[i][j]!=-1:
+                if ((i-n)**2+(j+1-n)**2)>n**2 or ((i+1-n)**2+(j-n)**2)>n**2 or ((i-n)**2+(j-1-n)**2)>n**2 or ((i-1-n)**2+(j-n)**2)>n**2 :
                     ps+=[(i,j)]
     ps+=[(0,n),(n,0),(n,2*n),(2*n,n)]
     return ps
@@ -58,7 +58,9 @@ def adj(m,loc):
             if m[p][q]!=-1:
                 vr+=[(p,q)]
     return vr
+    
 
+    
 def adjvs(m,loc):
     '''
     values of all adjacent points 
@@ -80,9 +82,8 @@ def main(d):
     '''
     n=100/d
     m=gene0(n)
-    ps=bpoints(m,n)
     while notcomp(m,n):
-        (i,j)=random.choice(ps)
+        (i,j)=random.choice(bpoints(m,n))
         m[i][j]=1
         while notjoin(m,(i,j)):
             (ip,jp)=random.choice(adj(m,(i,j)))
@@ -101,7 +102,10 @@ def notcomp(m,n):
     return True
 
 def pplot(m):
-    pylab.contour(m)
+    pylab.contour(m,levels=[-0.8,0.8])
     pylab.show()
     
 main(25)
+
+
+
