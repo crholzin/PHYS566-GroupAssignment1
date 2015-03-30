@@ -1,0 +1,132 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Mar 28 11:19:08 2015
+@author: kevinhe
+"""
+
+import math
+import random
+import pylab
+
+def rg(n):
+    return range(2*n+1) # Range is defined to be used in setting boundary conditions
+    
+def gene0(n):
+    '''
+    generate the initial grid 
+    with -1 representing points beyond boundary
+    and 0 the empty grid sites
+    and 1 the occupied sites
+    '''
+    m=[] # An empty list is defined as 'm' here
+    for i in rg(n):
+        t=[]
+        for j in rg(n):
+            if (i-n)**2+(j-n)**2>n**2: # If the distance from the origin is greater than a given distance 'n' squared, then the point is beyond the boundary; using this scheme, a circular boundary is created
+                t+=[-1]
+            else:
+                t+=[0] # Unoccupied sites defined
+        m+=[t] # 'm' becomes a list of lists, defining the circular boundary condition
+    m[n][n]=1
+    return m
+
+def bpoints(m,n):
+    '''
+    find all boundary points
+    '''
+    ps=[] # Another empty list is defined here
+    for i in range(1,2*n): # Defining ranges all the way to the perimeter
+        for j in range(1,2*n):
+            if m[i][j]!=-1: # That is, if, a given point is defined currently as an unoccupied site within the boundary
+                if ((i-n)**2+(j+1-n)**2)>n**2 or ((i+1-n)**2+(j-n)**2)>n**2 or ((i-n)**2+(j-1-n)**2)>n**2 or ((i-1-n)**2+(j-n)**2)>n**2 :
+                    ps+=[(i,j)] # Making a list of the boundary points by identifying those unoccupied sites within the boundary whose neighbors are outside the boundary
+    ps+=[(0,n),(n,0),(n,2*n),(2*n,n)]
+    return ps
+
+def adj(m,loc):
+    '''
+    loc is the tuple storing the coordinate
+    return the coordinates of all adjacent non-boundary points around loc
+    '''
+    (i1,j1)=loc
+    n=(len(m)-1)/2
+    vs=[(i1+1,j1),(i1-1,j1),(i1,j1+1),(i1,j1-1)] # Defines adjacent points in 2-D grid
+    vr=[]
+    for (p,q) in vs:
+        if (p in rg(n)) and (q in rg(n)):
+            if m[p][q]!=-1: # Checks that point is not ouside boundary
+                vr+=[(p,q)] # Stores adjacent non-boundary points
+    return vr # Again, a list of lists
+    
+
+    
+def adjvs(m,loc):
+    '''
+    values of all adjacent points 
+    '''
+    return [m[p][q] for (p,q) in adj(m,loc)] # Returns the value of the adjacent non-boundary points for a given location
+    
+def notjoin(m,loc):
+    '''
+    check if the moving monomer has joined the cluster
+    '''
+    if 1 in adjvs(m,loc):
+        return False # If one of the adjacent points is occupied, then the monomer has not 'not joined' the cluster; thus, 'False' is returned
+    return True
+    
+def main(d):
+    '''
+    main function
+    takes d, which is the grid size, as argument 
+    '''
+    n=100/d # Set grid resolution
+    m=gene0(n) # The boundary conditions are defined within the grid, within in the main function
+    maxr=0 # The 'maxr', 'maxrs', 'mass', and 'masses' are defined in preparation for part b)
+    maxrs=[]
+    mass=1 
+    masses=[]
+    while notcomp(m,n): # While the cluster has not touched a boundary point (see below)..
+        (i,j)=random.choice(bpoints(m,n)) # A random boundary point is chosen to start the random walk of the monomer, in accordance with the DLA model
+        m[i][j]=1
+        
+        while notjoin(m,(i,j)): # As long as the monomer has not yet joined the cluster..
+            (ip,jp)=random.choice(adj(m,(i,j))) # A random non-boundary adjacent point is chosen..
+            (m[i][j],m[ip][jp])=(m[ip][jp],m[i][j]) # And the values are swapped; this is, in essence, the random 'walk'
+            (i,j)=(ip,jp)
+           
+        if ((i-n)**2+(j-n)**2)*d**2>maxr**2: 
+            maxr=math.sqrt(((i-n)**2+(j-n)**2))*d # Maximum radius defined (part b))
+            
+        mass=mass+1 # The mass is incremented as a new monomer joins the cluster at a given radius
+        
+        maxrs=maxrs+[math.log(maxr)] # Maximum radii
+        masses+=[math.log(mass)] # Masses at given radii
+        
+    pylab.figure(1)
+    pylab.plot(masses,maxrs) # The masses and maximum radii are plotted
+    pylab.xlabel('number of molecules') # Plot parameters labeled
+    pylab.ylabel('maximum radius')
+    
+    #pylab.close()
+    #pplot(m)
+    return m
+    
+def notcomp(m,n):
+    '''
+    check if the cluster is complete, which means the cluster has touched the boundary
+    '''
+    for (p,q) in bpoints(m,n): 
+        if m[p][q]==1: # If one of the boundary points does equal 1, then the cluster has touched and it is complete
+            return False
+    return True
+
+def pplot(m):
+    pylab.figure(2)
+    pylab.contour(m,levels=[-0.5,0.5]) # The boundary and the cluster are plotted using the 'contour' function to show a clear picture of the cluster within the boundary
+    pylab.show()
+
+
+m=main(5) # The main function is run to create the 'm' grid
+pplot(m) # The grid is plotted according to the function 'pplot'
+pylab.show()
+
