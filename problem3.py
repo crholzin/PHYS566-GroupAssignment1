@@ -125,8 +125,11 @@ def pplot(m):
     pylab.contour(m,levels=[-0.5,0.5])
     pylab.show()
 
-for l in range(10):
-    main(5)
+
+m=main(5)
+pylab.show()
+pylab.close()
+pplot(m)
 pylab.show()
 
 
