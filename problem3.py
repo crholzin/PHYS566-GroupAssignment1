@@ -82,14 +82,34 @@ def main(d):
     '''
     n=100/d
     m=gene0(n)
+    maxr=0
+    maxrs=[]
+    mass=1
+    masses=[]
     while notcomp(m,n):
         (i,j)=random.choice(bpoints(m,n))
         m[i][j]=1
+        
         while notjoin(m,(i,j)):
             (ip,jp)=random.choice(adj(m,(i,j)))
             (m[i][j],m[ip][jp])=(m[ip][jp],m[i][j])
             (i,j)=(ip,jp)
-        pplot(m)
+           
+        if ((i-n)**2+(j-n)**2)*d**2>maxr**2:
+            maxr=math.sqrt(((i-n)**2+(j-n)**2))*d
+            
+        mass=mass+1
+        
+        maxrs=maxrs+[math.log(maxr)]
+        masses+=[math.log(mass)]
+        
+
+    pylab.plot(masses,maxrs)
+    pylab.xlabel('number of molecules')
+    pylab.ylabel('maximum radius')
+    
+    #pylab.close()
+    #pplot(m)
     return m
     
 def notcomp(m,n):
@@ -102,10 +122,11 @@ def notcomp(m,n):
     return True
 
 def pplot(m):
-    pylab.contour(m,levels=[-0.8,0.8])
+    pylab.contour(m,levels=[-0.5,0.5])
     pylab.show()
-    
-main(25)
 
+for l in range(10):
+    main(5)
+pylab.show()
 
 
