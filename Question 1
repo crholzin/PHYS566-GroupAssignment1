@@ -1,0 +1,230 @@
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+import math as m
+import random
+from __future__ import division
+
+
+
+#create the lattice
+
+N = 100
+grid = np.zeros((N,N))
+
+x=50
+y=50
+
+walker = np.zeros((100,2))
+walker[0,0] = x
+walker[0,1] = y
+
+print walker
+
+
+
+# random walker
+
+def walking(walker,x,y):
+    for i in range(0,100):
+        walker[i,0] = x
+        walker[i,1] = y
+        a = random.random()
+        if a <= 0.25:
+            x = x + 1
+        if a > 0.25 and a <= 0.5:
+            x = x - 1
+        if a > 0.5 and a <= 0.75:
+            y = y + 1
+        if a > 0.75 and a <= 1:
+            y = y - 1
+    return walker
+
+print walker
+
+
+
+# plot of random walker path
+
+plt.plot(walker[:,0],walker[:,1],'r-')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.xlim(0,100)
+plt.ylim(0,100)
+plt.show()
+
+
+
+# PART A
+# RANDOM WALKER X10000
+
+N = 100
+grid = np.zeros((N,N))
+
+x=50
+y=50
+
+walker = np.zeros((100,2))
+walker[0,0] = x
+walker[0,1] = y
+
+def walking(walker,x,y):
+    for i in range(0,100):
+        walker[i,0] = x
+        walker[i,1] = y
+        a = random.random()
+        if a <= 0.25:
+            x = x + 1
+        if a > 0.25 and a <= 0.5:
+            x = x - 1
+        if a > 0.5 and a <= 0.75:
+            y = y + 1
+        if a > 0.75 and a <= 1:
+            y = y - 1
+    return walker[:,0]
+
+
+
+many_walks = np.zeros((10000,N))
+
+for i in range(0,10000):
+    x=50
+    y=50
+    many_walks[i] = walking(walker,x,y)
+
+print many_walks
+
+
+
+# AVG RANDOM WALKER X10000:  <Xn>
+
+avg_walks_x = np.zeros((100))
+avg_walks_x = many_walks.mean(axis=0)
+print avg_walks_x
+
+
+# SQ RANDOM WALKER X10000:  Xn^2
+
+sq_walks_x = np.zeros((100))
+sq_walks_x = many_walks**2
+print sq_walks_x
+
+
+# AVG SQ RANDOM WALKER X10000:  <Xn^2>
+
+ms_walks_x = np.zeros((100))
+ms_walks_x = sq_walks_x.mean(axis=0)
+print ms_walks_x
+
+
+plt.plot(avg_walks_x,'r-')
+plt.xlabel('Step (n)', fontsize=16)
+plt.ylabel('Mean Position (<x>)', fontsize=16)
+plt.xlim(0,100)
+plt.ylim(49,51)
+plt.title("Mean Position x at Step n", fontsize=20)
+plt.savefig("Holzinger-GA1a-Fig1a1.jpeg")
+plt.show()
+
+plt.plot(ms_walks_x,'b-')
+plt.xlabel('Step (n)', fontsize=16)
+plt.ylabel('Mean Square Position (<x^2>)', fontsize=16)
+plt.xlim(0,100)
+plt.ylim(2400,2600)
+plt.title("Mean Square Position x at Step n", fontsize=20)
+plt.savefig("Holzinger-GA1a-Fig1a2.jpeg")
+plt.show()
+
+
+
+# PART B
+# RANDOM WALKER X & Y, X10000
+
+N = 100
+grid = np.zeros((N,N))
+
+x=50
+y=50
+
+walker = np.zeros((100,2))
+walker[0,0] = x
+walker[0,1] = y
+
+def walking_x(walker,x,y):
+    for i in range(0,100):
+        walker[i,0] = x
+        walker[i,1] = y
+        a = random.random()
+        if a <= 0.25:
+            x = x + 1
+        if a > 0.25 and a <= 0.5:
+            x = x - 1
+        if a > 0.5 and a <= 0.75:
+            y = y + 1
+        if a > 0.75 and a <= 1:
+            y = y - 1
+    return walker[:,0]
+
+def walking_y(walker,x,y):
+    for i in range(0,100):
+        walker[i,0] = x
+        walker[i,1] = y
+        a = random.random()
+        if a <= 0.25:
+            x = x + 1
+        if a > 0.25 and a <= 0.5:
+            x = x - 1
+        if a > 0.5 and a <= 0.75:
+            y = y + 1
+        if a > 0.75 and a <= 1:
+            y = y - 1
+    return walker[:,1]
+
+many_walks_x = np.zeros((10000,N))
+
+for i in range(0,10000):
+    x=50
+    y=50
+    many_walks_x[i] = walking_x(walker,x,y)
+
+print many_walks_x
+
+many_walks_y = np.zeros((10000,N))
+
+for i in range(0,10000):
+    x=50
+    y=50
+    many_walks_y[i] = walking_y(walker,x,y)
+
+print many_walks_y
+
+
+
+# R^2 X10000
+# R = (X^2+Y^2)^0.5
+# R^2 = X^2+Y^2
+
+r = np.zeros((100))
+r = (many_walks_x**2 + many_walks_y**2)
+print r
+
+
+
+# AVG R^2 x10000:  <R^2>
+
+avg_r = np.zeros((100))
+avg_r = r.mean(axis=0)
+print avg_r
+
+
+
+plt.plot(avg_r,'k-')
+plt.xlabel('Step (n)', fontsize=16)
+plt.ylabel('Mean Square Distance (<r^2>)', fontsize=16)
+plt.xlim(0,100)
+plt.ylim(4500,5500)
+plt.title("Mean Square Distance from the Starting Point", fontsize=20)
+plt.savefig("Holzinger-GA1b-Fig1b1.jpeg")
+plt.show()
+
+
