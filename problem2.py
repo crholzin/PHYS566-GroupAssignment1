@@ -47,8 +47,9 @@ for i in range(5):
     y = 1.0/((2*pi*(popt[0]**2))**0.5)*np.exp(-(x**2)/(2*(popt[0]**2)))
     pyplot.plot(x, y, label='Gaussian fit with sigma = ' + str(popt[0]))
     pyplot.legend(prop={'size':9})
-    pyplot.savefig('2b%d.png' %(i+1))
+    pyplot.savefig('2b'+str(i+1)+'.eps')
     pyplot.show()
+    pyplot.close()
 
 # relation between sigma square and t
 fit = polyfit(t,sigma2,1)
@@ -63,5 +64,5 @@ pyplot.ylim(0,2.5)
 hold(True)
 pyplot.plot(t,fit_fn(t), label = 'linear fitting: y = %.2f x' %fit[0] )
 pyplot.legend(prop={'size':9})
-pyplot.savefig('2b6.png')
+pyplot.savefig('2b6.eps')
 pyplot.show()
