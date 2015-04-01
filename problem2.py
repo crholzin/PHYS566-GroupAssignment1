@@ -12,26 +12,27 @@ rho = [0.0 for col in range(n)]
 D = 2.0
 countstep = 0
 s = [100, 500, 1000, 3000, 5000]
-x = np.linspace(-5,5,101)
+x = np.linspace(-5,5,n)
 t = []
 sigma2 = []
 for i in range(48,53):
     rho[i] = 2
 
-
+# Define a function to fit the diffusion curve
+def func(x, sigma):
+    return 1.0/((2*pi*(sigma**2))**0.5)*np.exp(-(x**2)/(2*(sigma**2)))
+    
 # 5 different time
-for i in range(5):
-    step = s[i]
+for j in range(5):
+    step = s[j]
     # Finite difference formular
     while countstep < step:
-        for i in range(1,n-1):
-                rho[i] = rho[i]+D*dt/((dx)**2)*(rho[i+1]+rho[i-1]-2*rho[i])
+        for k in range(1,n-1):
+                rho[k] = rho[k]+D*dt/((dx)**2)*(rho[k+1]+rho[k-1]-2*rho[k])
         countstep += 1 
-    
-                
+        
+                                        
     # Curve fit
-    def func(x, sigma):
-        return 1.0/((2*pi*(sigma**2))**0.5)*np.exp(-(x**2)/(2*(sigma**2)))
     popt, pocv = curve_fit(func, x, rho)
     t += [dt*step]
     sigma2 += [popt[0]**2]
@@ -47,9 +48,10 @@ for i in range(5):
     y = 1.0/((2*pi*(popt[0]**2))**0.5)*np.exp(-(x**2)/(2*(popt[0]**2)))
     pyplot.plot(x, y, label='Gaussian fit with sigma = ' + str(popt[0]))
     pyplot.legend(prop={'size':9})
-    pyplot.savefig('2b'+str(i+1)+'.eps')
+    pyplot.savefig('2b'+str(j+1)+'.eps')
     pyplot.show()
     pyplot.close()
+    
 
 # relation between sigma square and t
 fit = polyfit(t,sigma2,1)
