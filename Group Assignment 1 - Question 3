@@ -79,7 +79,7 @@ def main(d):
     main function
     takes d, which is the grid size, as argument 
     '''
-    n=35/d # Set grid resolution
+    n=60/d # Set radius, grid resolution
     m=gene0(n) # The boundary conditions are defined within the grid, within in the main function
     maxr=0 # The 'maxr', 'maxrs', 'mass', and 'masses' are defined in preparation for part b)
     maxrs=[]
@@ -136,7 +136,7 @@ def pplot(m):
     
 
 
-[m,fractcaldim]=main(1) # The main function is run to create the 'm' grid
+[m,fractaldim]=main(1) # The main function is run to create the 'm' grid
 pplot(m) # The grid is plotted according to the function 'pplot'
 
 
@@ -147,7 +147,7 @@ def mainavg(d):
     mainavg function (same as main function without linear fit and without printing of fractcal dimension -- used for calculation of average fractal dimension)
     takes d, which is the grid size, as argument 
     '''
-    n=35/d # Set grid resolution
+    n=60/d # Set radius, grid resolution
     m=gene0(n) # The boundary conditions are defined within the grid, within in the main function
     maxr=0 # The 'maxr', 'maxrs', 'mass', and 'masses' are defined in preparation for part b)
     maxrs=[]
