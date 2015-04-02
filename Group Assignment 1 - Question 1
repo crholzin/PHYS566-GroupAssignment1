@@ -40,7 +40,7 @@ def walking(walker,x,y):
             y = y - 1
     return walker
 
-print walker
+print walking(walker,x,y)
 
 
 
@@ -103,11 +103,13 @@ avg_walks_x = many_walks.mean(axis=0)
 print avg_walks_x
 
 
+
 # SQ RANDOM WALKER X10000:  Xn^2
 
 sq_walks_x = np.zeros((100))
 sq_walks_x = many_walks**2
 print sq_walks_x
+
 
 
 # AVG SQ RANDOM WALKER X10000:  <Xn^2>
@@ -117,23 +119,25 @@ ms_walks_x = sq_walks_x.mean(axis=0)
 print ms_walks_x
 
 
+
 plt.plot(avg_walks_x,'r-')
-plt.xlabel('Step (n)', fontsize=16)
-plt.ylabel('Mean Position (<x>)', fontsize=16)
+plt.xlabel('Step')
+plt.ylabel('Mean Position')
 plt.xlim(0,100)
 plt.ylim(49,51)
-plt.title("Mean Position x at Step n", fontsize=20)
-plt.savefig("Holzinger-GA1a-Fig1a1.jpeg")
+plt.title("Average Random Walker Position Over Time")
+plt.savefig("1A1.jpeg")
 plt.show()
 
 plt.plot(ms_walks_x,'b-')
-plt.xlabel('Step (n)', fontsize=16)
-plt.ylabel('Mean Square Position (<x^2>)', fontsize=16)
+plt.xlabel('Step')
+plt.ylabel('Mean Square Position')
 plt.xlim(0,100)
 plt.ylim(2400,2600)
-plt.title("Mean Square Position x at Step n", fontsize=20)
-plt.savefig("Holzinger-GA1a-Fig1a2.jpeg")
+plt.title("Average Random Walker Position Squared Over Time")
+plt.savefig("1A2.jpeg")
 plt.show()
+
 
 
 
@@ -150,7 +154,7 @@ walker = np.zeros((100,2))
 walker[0,0] = x
 walker[0,1] = y
 
-def walking_x(walker,x,y):
+def walking(walker,x,y):
     for i in range(0,100):
         walker[i,0] = x
         walker[i,1] = y
@@ -163,68 +167,54 @@ def walking_x(walker,x,y):
             y = y + 1
         if a > 0.75 and a <= 1:
             y = y - 1
-    return walker[:,0]
+    return walker
 
-def walking_y(walker,x,y):
-    for i in range(0,100):
-        walker[i,0] = x
-        walker[i,1] = y
-        a = random.random()
-        if a <= 0.25:
-            x = x + 1
-        if a > 0.25 and a <= 0.5:
-            x = x - 1
-        if a > 0.5 and a <= 0.75:
-            y = y + 1
-        if a > 0.75 and a <= 1:
-            y = y - 1
-    return walker[:,1]
+print walking(walker,x,y)
 
-many_walks_x = np.zeros((10000,N))
+
+
+many_walks_b = np.zeros((10000,N,2))
 
 for i in range(0,10000):
     x=50
     y=50
-    many_walks_x[i] = walking_x(walker,x,y)
+    many_walks_b[i] = walking(walker,x,y)
 
-print many_walks_x
-
-many_walks_y = np.zeros((10000,N))
-
-for i in range(0,10000):
-    x=50
-    y=50
-    many_walks_y[i] = walking_y(walker,x,y)
-
-print many_walks_y
+print many_walks_b
 
 
 
-# R^2 X10000
-# R = (X^2+Y^2)^0.5
-# R^2 = X^2+Y^2
+# Xn^2, Yn^2
 
-r = np.zeros((100))
-r = (many_walks_x**2 + many_walks_y**2)
-print r
+sq_walks_b = np.zeros((10000,N,2))
+sq_walks_b = many_walks_b**2
+print sq_walks_b
+
+
+
+# Rn^2
+
+r1 = np.zeros((10000,N,1))
+r1 = sq_walks_b[:,:,0] + sq_walks_b[:,:,1]
+print r1
 
 
 
 # AVG R^2 x10000:  <R^2>
 
 avg_r = np.zeros((100))
-avg_r = r.mean(axis=0)
+avg_r = r1.mean(axis=0)
 print avg_r
 
 
 
 plt.plot(avg_r,'k-')
-plt.xlabel('Step (n)', fontsize=16)
-plt.ylabel('Mean Square Distance (<r^2>)', fontsize=16)
+plt.xlabel('Time')
+plt.ylabel('Mean Square Distance')
 plt.xlim(0,100)
 plt.ylim(4500,5500)
-plt.title("Mean Square Distance from the Starting Point", fontsize=20)
-plt.savefig("Holzinger-GA1b-Fig1b1.jpeg")
+plt.title("Mean Square Distance from the Starting Point")
+plt.savefig("1B1.jpeg")
 plt.show()
 
 
