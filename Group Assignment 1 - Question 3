@@ -7,7 +7,6 @@ Created on Sat Mar 28 11:19:08 2015
 import math
 import random
 import pylab
-import numpy as np
 
 def rg(n):
     return range(2*n+1) # Range is defined to be used in setting boundary conditions
@@ -75,20 +74,19 @@ def notjoin(m,loc):
         return False # If one of the adjacent points is occupied, then the monomer has not 'not joined' the cluster; thus, 'False' is returned
     return True
     
-def main(r,d):
+def main(d):
     '''
     main function
     takes d, which is the grid size, as argument 
     '''
-    n=r/d # Set grid resolution
+    n=60/d # Set radius, grid resolution
     m=gene0(n) # The boundary conditions are defined within the grid, within in the main function
     maxr=0 # The 'maxr', 'maxrs', 'mass', and 'masses' are defined in preparation for part b)
     maxrs=[]
     mass=1 # Seed particle
     masses=[]
-    ps=bpoints(m,n)
-    while notcomp(m,n,ps): # While the cluster has not touched a boundary point (see below)..
-        (i,j)=random.choice(ps) # A random boundary point is chosen to start the random walk of the monomer, in accordance with the DLA model
+    while notcomp(m,n): # While the cluster has not touched a boundary point (see below)..
+        (i,j)=random.choice(bpoints(m,n)) # A random boundary point is chosen to start the random walk of the monomer, in accordance with the DLA model
         m[i][j]=1
         
         while notjoin(m,(i,j)): # As long as the monomer has not yet joined the cluster..
@@ -103,40 +101,8 @@ def main(r,d):
         
         maxrs=maxrs+[math.log(maxr)] # Maximum radii
         masses+=[math.log(mass)] # Masses at given radii; this algorithm works because the DLA model generally has the cluster growing outward from the seed
-    
-    return (m,(maxrs,masses))
-    
-    
-    
-def notcomp(m,n,ps):
-    '''
-    check if the cluster is complete, which means the cluster has touched the boundary
-    '''
-    for (p,q) in ps: 
-        if m[p][q]==1: # If one of the boundary points does equal 1, then the cluster has touched and it is complete
-            return False
-    return True
-
-    
-def pplot(m,d,r,name):
-    '''
-    plot the cluster
-    '''
-    xs=np.linspace(-r,r,2*r/d+1)
-    ys=np.linspace(-r,r,2*r/d+1)
-    pylab.contour(xs,ys,m,levels=[-0.5,0.5])
-    pylab.xlabel('x')
-    pylab.ylabel('y')
-    pylab.show()
-    pylab.savefig(name+'.eps')
-    pylab.close()
-
-def fdplot(c,name):
-    '''
-    plot the tuple containing two lists (ln of maxrs and masses) 
-    make a fit and return the value of the slope
-    '''
-    (maxrs,masses)=c
+        
+    pylab.figure(1)
     pylab.plot(maxrs,masses) # The masses and maximum radii are plotted
     pylab.xlabel('ln of radius') # Plot parameters labeled
     pylab.ylabel('ln of mass (number of molecules)')
@@ -145,47 +111,83 @@ def fdplot(c,name):
     a=pylab.linspace(pylab.amin(maxrs),pylab.amax(maxrs),100) # The linear fit is plotted against the radius values
     b=pol(a)
     pylab.plot(a,b,'--')
-    fd=linfit[0]
-    pylab.savefig(name+'.eps')
-    pylab.show() 
-    pylab.close()
-    return fd
+    fractaldim=linfit[0]
+    print 'The fractal dimension of the cluster is {}.'.format(fractaldim)
     
-def part(k):
+    
+    #pylab.close()
+    #pplot(m)
+    return m, fractaldim
+    
+    
+    
+def notcomp(m,n):
     '''
-    a function that takes care of different parts of the assignment
+    check if the cluster is complete, which means the cluster has touched the boundary
     '''
-    if k=='a':
-        r=100
-        d=2
-        (m,c)=main(r,d)
-        pplot(m,d,r,'3a1')
+    for (p,q) in bpoints(m,n): 
+        if m[p][q]==1: # If one of the boundary points does equal 1, then the cluster has touched and it is complete
+            return False
+    return True
+
+def pplot(m):
+    pylab.figure(2)
+    pylab.contour(m,levels=[-0.5,0.5]) # The boundary and the cluster are plotted using the 'contour' function to show a clear picture of the cluster within the boundary
+    
+
+
+[m,fractaldim]=main(1) # The main function is run to create the 'm' grid
+pplot(m) # The grid is plotted according to the function 'pplot'
+
+
+fracdim=pylab.zeros(10)
+
+def mainavg(d):
+    '''
+    mainavg function (same as main function without linear fit and without printing of fractcal dimension -- used for calculation of average fractal dimension)
+    takes d, which is the grid size, as argument 
+    '''
+    n=60/d # Set radius, grid resolution
+    m=gene0(n) # The boundary conditions are defined within the grid, within in the main function
+    maxr=0 # The 'maxr', 'maxrs', 'mass', and 'masses' are defined in preparation for part b)
+    maxrs=[]
+    mass=1 # Seed particle
+    masses=[]
+    while notcomp(m,n): # While the cluster has not touched a boundary point (see below)..
+        (i,j)=random.choice(bpoints(m,n)) # A random boundary point is chosen to start the random walk of the monomer, in accordance with the DLA model
+        m[i][j]=1
         
-    if k=='b':
-        r=100
-        d=2
-        (m,c)=main(r,d)
-        fd=fdplot(c,'3b1')
-        print 'The fractal dimension of the cluster is ',fd
-    
-    if k=='c':
-        d=1
-        r=50
-        fds=[]
-        for i in range(1,11):
-            (m,c)=main(r,d)
-            pplot(m,d,r,'3c'+str(i))
-            fd=fdplot(c,'3c'+str(10+i))
-            fds+=[fd]
-            print 'In the '+str(i)+' th simulation, the fractal dimension is', fd
+        while notjoin(m,(i,j)): # As long as the monomer has not yet joined the cluster..
+            (ip,jp)=random.choice(adj(m,(i,j))) # A random non-boundary adjacent point is chosen..
+            (m[i][j],m[ip][jp])=(m[ip][jp],m[i][j]) # And the values are swapped; this is, in essence, the random 'walk'
+            (i,j)=(ip,jp)
+           
+        if ((i-n)**2+(j-n)**2)*d**2>maxr**2: 
+            maxr=math.sqrt(((i-n)**2+(j-n)**2))*d # Maximum radius defined (part b))
             
-        avefd=sum(fds)/10
-        print 'The average fractal dimension is',avefd
+        mass=mass+1 # The mass is incremented as a new monomer joins the cluster at a given radius
         
-for k in ['a','b','c']:
-    print 'part',k
-    part(k)
-    print 
+        maxrs=maxrs+[math.log(maxr)] # Maximum radii
+        masses+=[math.log(mass)] # Masses at given radii; this algorithm works because the DLA model generally has the cluster growing outward from the seed
+        
 
+    linfit=pylab.polyfit(pylab.array(maxrs),pylab.array(masses),1)
+    fractaldim=linfit[0]
+        
+    #pylab.close()
+    #pplot(m)
+    return m, fractaldim
+
+for i in range (0,10): # Calculates average fractal dimension by running 'mainavg' function 10 times
+    [m,fractaldim]=mainavg(1)
+    fracdim[i]=fractaldim
+    pylab.figure(i+3)
+    pylab.contour(m,levels=[-0.5,0.5]) # The boundary and the cluster are plotted using the 'contour' function to show a clear picture of the cluster within the boundary
     
+    
+avgfracdim=pylab.average(fracdim) # Average of fractal dimensions of 10 clusters
 
+print 'The average fractal dimension over 10 clusters is {}.'.format(avgfracdim)
+
+pylab.show()
+    
